@@ -1,14 +1,14 @@
 {
   "name": "recursive-backtracking-maze-js",
   "version": "1.0.0",
-  "main": "index.js",
   "author": "Michael Moore <miketmoore@gmail.com>",
   "devDependencies": {
+    "awesome-typescript-loader": "^5.2.1",
     "typescript": "^3.3.4000",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
   },
   "scripts": {
-    "prepublish": "tsc"
+    "build": "webpack --mode=development"
   }
 }
