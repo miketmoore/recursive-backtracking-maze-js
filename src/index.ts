@@ -1,3 +1,5 @@
+import { gridFactory } from './Grid'
+
 class HelloWorld {
   private name: string
   constructor(name: string) {
@@ -19,4 +21,10 @@ window.onload = () => {
   }
   ctx.fillStyle = '#FF0000'
   ctx.fillRect(0, 0, 150, 75)
+
+  const grid = gridFactory(20, 5, 5)
+
+  grid.forEachRow((row, col, cell) => {
+    console.log(row, col, cell)
+  })
 }
