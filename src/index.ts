@@ -6,5 +6,6 @@ class HelloWorld {
   public greet = () => console.log(`Hello, ${this.name}!`)
 }
 
-const c = new HelloWorld("Mike");
-c.greet();
+const c = new HelloWorld('Mike')
+c.greet()
+const canvas = document.getElementById('canvas')
