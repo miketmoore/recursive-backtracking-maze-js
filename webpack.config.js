@@ -1,4 +1,5 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var path = require('path')
 
 module.exports = {
     entry: "./src/index.ts",
@@ -24,5 +25,10 @@ module.exports = {
 
     plugins: [
       new HtmlWebpackPlugin()
-    ]
+    ],
+    devServer: {
+      contentBase: path.join(__dirname, 'dist'),
+      compress: true,
+      port: 9000
+    }
 };
