@@ -6,6 +6,17 @@ class HelloWorld {
   public greet = () => console.log(`Hello, ${this.name}!`)
 }
 
-const c = new HelloWorld('Mike')
-c.greet()
-const canvas = document.getElementById('canvas')
+window.onload = () => {
+  const c = new HelloWorld('Mike')
+  c.greet()
+  const canvas = document.getElementById('canvas') as HTMLCanvasElement
+  if (!canvas) {
+    throw new Error('Could not find canvas')
+  }
+  const ctx = canvas.getContext('2d')
+  if (!ctx) {
+    throw new Error('Could not get 2d context')
+  }
+  ctx.fillStyle = '#FF0000'
+  ctx.fillRect(0, 0, 150, 75)
+}
