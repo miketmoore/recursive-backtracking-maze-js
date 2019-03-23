@@ -1,3 +1,5 @@
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+
 module.exports = {
     entry: "./src/index.ts",
     output: {
@@ -18,5 +20,9 @@ module.exports = {
 
             { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
         ]
-    }
+    },
+
+    plugins: [
+      new HtmlWebpackPlugin()
+    ]
 };
