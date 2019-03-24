@@ -108,14 +108,11 @@ function carve(grid: IGrid, row: number, col: number) {
   // is cell that is adjacent to wall that was just carved already visited or not?
   const [adjacentRow, adjacentCol] = grid.getAdjacentCellCoords(wall, row, col)
 
-  if (adjacentRow != -1 && adjacentCol != -1) {
-    console.log('boop ', adjacentRow, adjacentCol)
-    if (grid.rowInBounds(adjacentRow) && grid.colInBounds(adjacentCol)) {
-      const adjacent = grid.getCell(adjacentRow, adjacentCol)
-      if (!adjacent.isVisited()) {
-        adjacent.getWalls()[cell.getOppositeWall(wall)] = 0
-        carve(grid, adjacentRow, adjacentCol)
-      }
+  if (grid.rowInBounds(adjacentRow) && grid.colInBounds(adjacentCol)) {
+    const adjacent = grid.getCell(adjacentRow, adjacentCol)
+    if (!adjacent.isVisited()) {
+      adjacent.getWalls()[cell.getOppositeWall(wall)] = 0
+      carve(grid, adjacentRow, adjacentCol)
     }
   }
 }
