@@ -1,4 +1,4 @@
-import { IGrid } from './Grid'
+import { IGrid, directions, Direction } from './Grid'
 
 const randInRange = (min: number, max: number) => {
   min = Math.ceil(min)
@@ -15,19 +15,47 @@ export function carveMaze(grid: IGrid) {
   carve(grid, row, col)
 }
 
+const randDirection = () => {
+  const i = randInRange(0, 3)
+  return directions[i]
+}
+
+const getOppositeDirection: (direction: Direction) => Direction = direction => {
+  if (direction === 'north') {
+    return 'south'
+  } else if (direction === 'east') {
+    return 'west'
+  } else if (direction === 'south') {
+    return 'north'
+  }
+  return 'east'
+}
+
 function carve(grid: IGrid, row: number, col: number) {
-  const wall = randInRange(0, 3)
   const cell = grid.getCell(row, col)
-  cell.getWalls()[wall] = 0
+
+  // get walls not carved yet, that point to adjacent cells that have not been visited yet
+  // const wallsNotCarved = cell.getWalls().filter(wall => wall == 1)
+
+  // const wall = randInRange(0, 3)
+  const direction = randDirection()
+
+  cell.getWalls()[direction].state = 'carved'
   cell.markVisited()
+  console.log(cell)
 
   // is cell that is adjacent to wall that was just carved already visited or not?
-  const [adjacentRow, adjacentCol] = grid.getAdjacentCellCoords(wall, row, col)
+  const [adjacentRow, adjacentCol] = grid.getAdjacentCellCoords(
+    direction,
+    row,
+    col
+  )
 
   if (grid.rowInBounds(adjacentRow) && grid.colInBounds(adjacentCol)) {
     const adjacent = grid.getCell(adjacentRow, adjacentCol)
     if (!adjacent.isVisited()) {
-      adjacent.getWalls()[cell.getOppositeWall(wall)] = 0
+      const oppDir = getOppositeDirection(direction)
+      adjacent.getWalls()[oppDir].state = 'carved'
       carve(grid, adjacentRow, adjacentCol)
     }
   }

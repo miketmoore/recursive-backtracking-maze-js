@@ -1,5 +1,18 @@
+type WallState = 'solid' | 'carved'
+
+class Wall {
+  public state: WallState = 'solid'
+}
+
+const wallFactory = () => new Wall()
+
+export const directions: Direction[] = ['north', 'east', 'south', 'west']
+export type Direction = 'north' | 'east' | 'south' | 'west'
+
+type Walls = Record<Direction, Wall>
+
 export interface ICell {
-  readonly getWalls: () => number[]
+  readonly getWalls: () => Walls
   readonly markStart: () => void
   readonly isStart: () => boolean
   readonly markVisited: () => void
@@ -7,7 +20,12 @@ export interface ICell {
   readonly getOppositeWall: (wall: number) => number
 }
 class Cell implements ICell {
-  private walls = [1, 1, 1, 1]
+  private walls: Walls = {
+    north: wallFactory(),
+    east: wallFactory(),
+    south: wallFactory(),
+    west: wallFactory()
+  }
   private visited = false
   private start = false
 
@@ -34,7 +52,7 @@ export interface IGrid {
   readonly getTotalCols: () => number
   readonly getCell: (row: number, col: number) => ICell
   readonly getAdjacentCellCoords: (
-    wallIndex: number,
+    direction: Direction,
     row: number,
     col: number
   ) => [number, number]
@@ -71,18 +89,18 @@ class Grid implements IGrid {
   public getCell = (row: number, col: number) => this.cells[row][col]
 
   public getAdjacentCellCoords: (
-    wallIndex: number,
+    direction: Direction,
     row: number,
     col: number
-  ) => [number, number] = (wallIndex: number, row: number, col: number) => {
-    switch (wallIndex) {
-      case 0:
+  ) => [number, number] = (direction, row, col) => {
+    switch (direction) {
+      case 'north':
         return [row - 1, col]
-      case 1:
+      case 'east':
         return [row, col + 1]
-      case 2:
+      case 'south':
         return [row + 1, col]
-      case 3:
+      case 'west':
         return [row, col - 1]
     }
     return [-1, -1]

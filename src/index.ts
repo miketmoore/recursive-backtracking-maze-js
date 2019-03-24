@@ -67,20 +67,16 @@ function drawCell(
   const walls = cell.getWalls()
 
   ctx.fillStyle = '#000'
-  if (walls[0]) {
-    // north
+  if (walls.north.state === 'solid') {
     ctx.fillRect(x, y, size, wallWidth)
   }
-  if (walls[1]) {
-    // east
+  if (walls.east.state === 'solid') {
     ctx.fillRect(x + size - wallWidth, y, wallWidth, size)
   }
-  if (walls[2]) {
-    // south
+  if (walls.south.state === 'solid') {
     ctx.fillRect(x, y + size - wallWidth, size, wallWidth)
   }
-  if (walls[3]) {
-    // west
+  if (walls.west.state === 'solid') {
     ctx.fillRect(x, y, wallWidth, size)
   }
 }
