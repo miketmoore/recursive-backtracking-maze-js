@@ -1,6 +1,6 @@
 type WallState = 'solid' | 'carved'
 
-class Wall {
+export class Wall {
   public state: WallState = 'solid'
 }
 
@@ -46,6 +46,25 @@ class Cell implements ICell {
   }
 }
 
+export interface ICoord {
+  readonly row: number
+  readonly col: number
+}
+
+class Coord implements ICoord {
+  public row: number
+  public col: number
+  constructor(row: number, col: number) {
+    this.row = row
+    this.col = col
+  }
+}
+
+export const coordFactory: (row: number, col: number) => ICoord = (
+  row: number,
+  col: number
+) => new Coord(row, col)
+
 export interface IGrid {
   readonly forEachRow: (cb: (row: ICell[], rowIndex: number) => void) => void
   readonly getTotalRows: () => number
@@ -53,11 +72,9 @@ export interface IGrid {
   readonly getCell: (row: number, col: number) => ICell
   readonly getAdjacentCellCoords: (
     direction: Direction,
-    row: number,
-    col: number
-  ) => [number, number]
-  readonly rowInBounds: (row: number) => boolean
-  readonly colInBounds: (col: number) => boolean
+    coord: ICoord
+  ) => ICoord
+  readonly coordInBounds: (coord: ICoord) => boolean
 }
 
 class Grid implements IGrid {
@@ -90,24 +107,26 @@ class Grid implements IGrid {
 
   public getAdjacentCellCoords: (
     direction: Direction,
-    row: number,
-    col: number
-  ) => [number, number] = (direction, row, col) => {
+    coord: ICoord
+  ) => ICoord = (direction, coord) => {
     switch (direction) {
       case 'north':
-        return [row - 1, col]
+        return coordFactory(coord.row - 1, coord.col)
       case 'east':
-        return [row, col + 1]
+        return coordFactory(coord.row, coord.col + 1)
       case 'south':
-        return [row + 1, col]
+        return coordFactory(coord.row + 1, coord.col)
       case 'west':
-        return [row, col - 1]
+        return coordFactory(coord.row, coord.col - 1)
     }
-    return [-1, -1]
+    return coordFactory(-1, -1)
   }
 
-  public rowInBounds = (row: number) => row >= 0 && row < this.rows
-  public colInBounds = (col: number) => col >= 0 && col < this.cols
+  private rowInBounds = (row: number) => row >= 0 && row < this.rows
+  private colInBounds = (col: number) => col >= 0 && col < this.cols
+  public coordInBounds = (coord: ICoord) => {
+    return this.rowInBounds(coord.row) && this.colInBounds(coord.col)
+  }
 }
 
 export const gridFactory: (

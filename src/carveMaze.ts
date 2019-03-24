@@ -1,4 +1,11 @@
-import { IGrid, directions, Direction } from './Grid'
+import {
+  IGrid,
+  directions,
+  Direction,
+  Wall,
+  ICoord,
+  coordFactory
+} from './Grid'
 
 const randInRange = (min: number, max: number) => {
   min = Math.ceil(min)
@@ -12,7 +19,7 @@ export function carveMaze(grid: IGrid) {
   const row = randInRange(0, rows - 1)
   const col = randInRange(0, cols - 1)
   grid.getCell(row, col).markStart()
-  carve(grid, row, col)
+  carve(grid, coordFactory(row, col))
 }
 
 const randDirection = () => {
@@ -31,11 +38,16 @@ const getOppositeDirection: (direction: Direction) => Direction = direction => {
   return 'east'
 }
 
-function carve(grid: IGrid, row: number, col: number) {
-  const cell = grid.getCell(row, col)
+function carve(grid: IGrid, coord: ICoord) {
+  const cell = grid.getCell(coord.row, coord.col)
 
   // get walls not carved yet, that point to adjacent cells that have not been visited yet
-  // const wallsNotCarved = cell.getWalls().filter(wall => wall == 1)
+  // const _: Wall[] = Object.keys(cell.getWalls()).map((direction: Direction) => {
+  //   const wall = cell.getWalls()[direction]
+  //   if (wall.state === 'solid') {
+  //     const adjacentCoord = grid.getAdjacentCellCoords(direction, coord)
+  //   }
+  // })
 
   // const wall = randInRange(0, 3)
   const direction = randDirection()
@@ -45,18 +57,14 @@ function carve(grid: IGrid, row: number, col: number) {
   console.log(cell)
 
   // is cell that is adjacent to wall that was just carved already visited or not?
-  const [adjacentRow, adjacentCol] = grid.getAdjacentCellCoords(
-    direction,
-    row,
-    col
-  )
+  const adjacentCoord = grid.getAdjacentCellCoords(direction, coord)
 
-  if (grid.rowInBounds(adjacentRow) && grid.colInBounds(adjacentCol)) {
-    const adjacent = grid.getCell(adjacentRow, adjacentCol)
+  if (grid.coordInBounds(adjacentCoord)) {
+    const adjacent = grid.getCell(adjacentCoord.row, adjacentCoord.col)
     if (!adjacent.isVisited()) {
       const oppDir = getOppositeDirection(direction)
       adjacent.getWalls()[oppDir].state = 'carved'
-      carve(grid, adjacentRow, adjacentCol)
+      carve(grid, adjacentCoord)
     }
   }
 }
