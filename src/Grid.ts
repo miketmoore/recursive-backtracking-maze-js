@@ -1,5 +1,7 @@
 export interface ICell {
   readonly getWalls: () => number[]
+  readonly markStart: () => void
+  readonly isStart: () => boolean
   readonly markVisited: () => void
   readonly isVisited: () => boolean
   readonly getOppositeWall: (wall: number) => number
@@ -7,8 +9,12 @@ export interface ICell {
 class Cell implements ICell {
   private walls = [1, 1, 1, 1]
   private visited = false
+  private start = false
+
   public getWalls = () => this.walls
   public markVisited = () => (this.visited = true)
+  public markStart = () => (this.start = true)
+  public isStart = () => this.start
   public isVisited = () => this.visited
   public getOppositeWall = (wall: number) => {
     if (wall === 0) {

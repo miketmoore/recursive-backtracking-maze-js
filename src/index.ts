@@ -29,7 +29,13 @@ function run(ctx: CanvasRenderingContext2D) {
   let y = 0
   grid.forEachRow(row => {
     row.forEach(cell => {
-      drawRect(ctx, x, y, size, cell.isVisited() ? 'yellow' : '#999')
+      drawRect(
+        ctx,
+        x,
+        y,
+        size,
+        cell.isStart() ? 'blue' : cell.isVisited() ? 'yellow' : '#999'
+      )
       drawCell(ctx, wallWidth, x, y, size, cell)
       x += size
     })
@@ -89,6 +95,7 @@ function carveMaze(grid: IGrid) {
   const cols = grid.getTotalCols()
   const row = randInRange(0, rows - 1)
   const col = randInRange(0, cols - 1)
+  grid.getCell(row, col).markStart()
   carve(grid, row, col)
 }
 
@@ -100,6 +107,7 @@ function carve(grid: IGrid, row: number, col: number) {
 
   // is cell that is adjacent to wall that was just carved already visited or not?
   const [adjacentRow, adjacentCol] = grid.getAdjacentCellCoords(wall, row, col)
+
   if (adjacentRow != -1 && adjacentCol != -1) {
     console.log('boop ', adjacentRow, adjacentCol)
     if (grid.rowInBounds(adjacentRow) && grid.colInBounds(adjacentCol)) {
