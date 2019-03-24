@@ -2,6 +2,7 @@ export interface ICell {
   readonly getWalls: () => number[]
   readonly markVisited: () => void
   readonly isVisited: () => boolean
+  readonly getOppositeWall: (wall: number) => number
 }
 class Cell implements ICell {
   private walls = [1, 1, 1, 1]
@@ -9,6 +10,16 @@ class Cell implements ICell {
   public getWalls = () => this.walls
   public markVisited = () => (this.visited = true)
   public isVisited = () => this.visited
+  public getOppositeWall = (wall: number) => {
+    if (wall === 0) {
+      return 2
+    } else if (wall === 1) {
+      return 3
+    } else if (wall === 2) {
+      return 0
+    }
+    return 1
+  }
 }
 
 export interface IGrid {
@@ -16,6 +27,13 @@ export interface IGrid {
   readonly getTotalRows: () => number
   readonly getTotalCols: () => number
   readonly getCell: (row: number, col: number) => ICell
+  readonly getAdjacentCellCoords: (
+    wallIndex: number,
+    row: number,
+    col: number
+  ) => [number, number]
+  readonly rowInBounds: (row: number) => boolean
+  readonly colInBounds: (col: number) => boolean
 }
 
 class Grid implements IGrid {
@@ -45,6 +63,27 @@ class Grid implements IGrid {
   public getTotalRows = () => this.rows
   public getTotalCols = () => this.cols
   public getCell = (row: number, col: number) => this.cells[row][col]
+
+  public getAdjacentCellCoords: (
+    wallIndex: number,
+    row: number,
+    col: number
+  ) => [number, number] = (wallIndex: number, row: number, col: number) => {
+    switch (wallIndex) {
+      case 0:
+        return [row - 1, col]
+      case 1:
+        return [row, col + 1]
+      case 2:
+        return [row + 1, col]
+      case 3:
+        return [row, col - 1]
+    }
+    return [-1, -1]
+  }
+
+  public rowInBounds = (row: number) => row >= 0 && row < this.rows
+  public colInBounds = (col: number) => col >= 0 && col < this.cols
 }
 
 export const gridFactory: (
