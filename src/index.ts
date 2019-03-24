@@ -10,6 +10,13 @@ window.onload = () => {
     throw new Error('Could not get 2d context')
   }
 
+  const newBtn = document.getElementById('new') as HTMLButtonElement
+  newBtn.onclick = () => run(ctx)
+
+  run(ctx)
+}
+
+function run(ctx: CanvasRenderingContext2D) {
   const size = 50
   const grid = gridFactory(size, 5, 5)
 
