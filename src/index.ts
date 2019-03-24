@@ -18,9 +18,9 @@ window.onload = () => {
 }
 
 function run(ctx: CanvasRenderingContext2D) {
-  const rows = 15
-  const cols = 15
-  const size = 20
+  const rows = 30
+  const cols = 30
+  const size = 10
   const wallWidth = 1
   const grid = gridFactory(size, rows, cols)
 
