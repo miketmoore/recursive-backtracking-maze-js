@@ -1,16 +1,6 @@
-import { gridFactory, ICell } from './Grid'
-
-class HelloWorld {
-  private name: string
-  constructor(name: string) {
-    this.name = name
-  }
-  public greet = () => console.log(`Hello, ${this.name}!`)
-}
+import { gridFactory, ICell, IGrid } from './Grid'
 
 window.onload = () => {
-  const c = new HelloWorld('Mike')
-  c.greet()
   const canvas = document.getElementById('canvas') as HTMLCanvasElement
   if (!canvas) {
     throw new Error('Could not find canvas')
@@ -19,18 +9,17 @@ window.onload = () => {
   if (!ctx) {
     throw new Error('Could not get 2d context')
   }
-  // ctx.fillStyle = '#FF0000'
-  // ctx.fillRect(0, 0, 150, 75)
 
   const size = 50
   const grid = gridFactory(size, 5, 5)
 
+  carveMaze(grid)
+
   let x = 0
   let y = 0
-  grid.forEachRow((row, rowIndex) => {
-    row.forEach((cell, colIndex) => {
-      console.log(x, y)
-      drawRect(ctx, x, y, size, '#999')
+  grid.forEachRow(row => {
+    row.forEach(cell => {
+      drawRect(ctx, x, y, size, cell.isVisited() ? 'yellow' : '#999')
       drawCell(ctx, x, y, size, cell)
       x += size
     })
@@ -77,4 +66,25 @@ function drawCell(
     // west
     ctx.fillRect(x, y, wallWidth, size)
   }
+}
+
+const randInRange = (min: number, max: number) => {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min)) + min
+}
+
+function carveMaze(grid: IGrid) {
+  const rows = grid.getTotalRows()
+  const cols = grid.getTotalCols()
+  const row = randInRange(0, rows - 1)
+  const col = randInRange(0, cols - 1)
+  carve(grid, row, col)
+}
+
+function carve(grid: IGrid, row: number, col: number) {
+  const wall = randInRange(0, 3)
+  const cell = grid.getCell(row, col)
+  cell.getWalls()[wall] = 0
+  cell.markVisited()
 }

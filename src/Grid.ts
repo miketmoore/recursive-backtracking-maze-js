@@ -1,16 +1,28 @@
 export interface ICell {
   readonly getWalls: () => number[]
+  readonly markVisited: () => void
+  readonly isVisited: () => boolean
 }
 class Cell implements ICell {
   private walls = [1, 1, 1, 1]
+  private visited = false
   public getWalls = () => this.walls
+  public markVisited = () => (this.visited = true)
+  public isVisited = () => this.visited
 }
 
-class Grid {
+export interface IGrid {
+  readonly forEachRow: (cb: (row: ICell[], rowIndex: number) => void) => void
+  readonly getTotalRows: () => number
+  readonly getTotalCols: () => number
+  readonly getCell: (row: number, col: number) => ICell
+}
+
+class Grid implements IGrid {
   private size: number
   private rows: number
   private cols: number
-  private cells: Cell[][]
+  private cells: ICell[][]
   constructor(size: number, rows: number, cols: number) {
     this.size = size
     this.rows = rows
@@ -24,12 +36,19 @@ class Grid {
     }
   }
 
-  public forEachRow = (cb: (row: Cell[], rowIndex: number) => void) => {
+  public forEachRow = (cb: (row: ICell[], rowIndex: number) => void) => {
     this.cells.forEach((row, rowIndex) => {
       cb(row, rowIndex)
     })
   }
+
+  public getTotalRows = () => this.rows
+  public getTotalCols = () => this.cols
+  public getCell = (row: number, col: number) => this.cells[row][col]
 }
 
-export const gridFactory = (size: number, rows: number, cols: number) =>
-  new Grid(size, rows, cols)
+export const gridFactory: (
+  size: number,
+  rows: number,
+  cols: number
+) => IGrid = (size, rows, cols) => new Grid(size, rows, cols)
