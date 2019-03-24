@@ -1,4 +1,4 @@
-import { gridFactory } from './Grid'
+import { gridFactory, ICell } from './Grid'
 
 class HelloWorld {
   private name: string
@@ -19,12 +19,62 @@ window.onload = () => {
   if (!ctx) {
     throw new Error('Could not get 2d context')
   }
-  ctx.fillStyle = '#FF0000'
-  ctx.fillRect(0, 0, 150, 75)
+  // ctx.fillStyle = '#FF0000'
+  // ctx.fillRect(0, 0, 150, 75)
 
-  const grid = gridFactory(20, 5, 5)
+  const size = 50
+  const grid = gridFactory(size, 5, 5)
 
-  grid.forEachRow((row, col, cell) => {
-    console.log(row, col, cell)
+  let x = 0
+  let y = 0
+  grid.forEachRow((row, rowIndex) => {
+    row.forEach((cell, colIndex) => {
+      console.log(x, y)
+      drawRect(ctx, x, y, size, '#999')
+      drawCell(ctx, x, y, size, cell)
+      x += size
+    })
+    x = 0
+    y += size
   })
+}
+
+function drawRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  size: number,
+  color: string
+) {
+  ctx.fillStyle = color
+  ctx.fillRect(x, y, size, size)
+}
+
+function drawCell(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  size: number,
+  cell: ICell
+) {
+  const walls = cell.getWalls()
+
+  ctx.fillStyle = '#000'
+  const wallWidth = 5
+  if (walls[0]) {
+    // north
+    ctx.fillRect(x, y, size, wallWidth)
+  }
+  if (walls[1]) {
+    // east
+    ctx.fillRect(x + size - wallWidth, y, wallWidth, size)
+  }
+  if (walls[2]) {
+    // south
+    ctx.fillRect(x, y + size - wallWidth, size, wallWidth)
+  }
+  if (walls[3]) {
+    // west
+    ctx.fillRect(x, y, wallWidth, size)
+  }
 }

@@ -1,5 +1,9 @@
-class Cell {
+export interface ICell {
+  readonly getWalls: () => number[]
+}
+class Cell implements ICell {
   private walls = [1, 1, 1, 1]
+  public getWalls = () => this.walls
 }
 
 class Grid {
@@ -20,11 +24,9 @@ class Grid {
     }
   }
 
-  public forEachRow = (cb: (row: number, col: number, cell: Cell) => void) => {
+  public forEachRow = (cb: (row: Cell[], rowIndex: number) => void) => {
     this.cells.forEach((row, rowIndex) => {
-      row.forEach((cell, colIndex) => {
-        cb(rowIndex, colIndex, cell)
-      })
+      cb(row, rowIndex)
     })
   }
 }
