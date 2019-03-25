@@ -1,5 +1,5 @@
-import { IWalls, wallsFactory } from './Walls'
-import { ICoord } from './Coord'
+import { IWalls, wallsFactory } from './walls'
+import { ICoord } from './coord'
 
 export interface ICell {
   readonly getWalls: () => IWalls

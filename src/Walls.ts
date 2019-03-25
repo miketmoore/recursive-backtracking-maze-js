@@ -1,4 +1,4 @@
-import { Direction } from './Direction'
+import { Direction } from './direction'
 
 type WallState = 'solid' | 'carved'
 

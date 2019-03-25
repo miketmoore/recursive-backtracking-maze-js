@@ -1,8 +1,8 @@
-import { IGrid } from './Grid'
-import { ICoord } from './Coord'
-import { Direction } from './Direction'
-import { ICell } from './Cell'
-import { Wall } from './Walls'
+import { IGrid } from './grid'
+import { ICoord } from './coord'
+import { Direction } from './direction'
+import { ICell } from './cell'
+import { Wall } from './walls'
 
 export interface ICarveableGrid {
   readonly getCell: (coord: ICoord) => ICell

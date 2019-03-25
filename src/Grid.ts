@@ -1,6 +1,6 @@
-import { ICoord, coordFactory } from './Coord'
-import { ICell, cellFactory } from './Cell'
-import { Direction } from './Direction'
+import { ICoord, coordFactory } from './coord'
+import { ICell, cellFactory } from './cell'
+import { Direction } from './direction'
 import { randInRange } from './rand'
 
 export interface IGrid {

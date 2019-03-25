@@ -1,8 +1,8 @@
-import { IGrid } from './Grid'
-import { carveGridFactory, ICarveableGrid } from './CarveableGrid'
+import { IGrid } from './grid'
+import { carveGridFactory, ICarveableGrid } from './carveable-grid'
 import { randInRange } from './rand'
-import { coordFactory, ICoord } from './Coord'
-import { Direction } from './Direction'
+import { coordFactory, ICoord } from './coord'
+import { Direction } from './direction'
 
 const randCoord = (rows: number, cols: number) =>
   coordFactory(randInRange(0, rows - 1), randInRange(0, cols - 1))
