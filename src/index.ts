@@ -1,5 +1,6 @@
-import { gridFactory, ICell, IGrid } from './Grid'
+import { gridFactory } from './Grid'
 import { carveMaze } from './carveMaze'
+import { ICell } from './Cell'
 
 window.onload = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement

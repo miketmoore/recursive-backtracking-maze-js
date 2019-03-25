@@ -1,19 +1,8 @@
-import {
-  IGrid,
-  ICell,
-  directions,
-  Direction,
-  IWalls,
-  Wall,
-  ICoord,
-  coordFactory
-} from './Grid'
-
-const randInRange = (min: number, max: number) => {
-  min = Math.ceil(min)
-  max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min)) + min
-}
+import { IGrid } from './Grid'
+import { carveGridFactory, ICarveableGrid } from './CarveableGrid'
+import { randInRange } from './rand'
+import { coordFactory, ICoord } from './Coord'
+import { Direction } from './Direction'
 
 const randCoord = (rows: number, cols: number) =>
   coordFactory(randInRange(0, rows - 1), randInRange(0, cols - 1))
@@ -34,55 +23,6 @@ const getOppositeDirection: (direction: Direction) => Direction = direction => {
     return 'north'
   }
   return 'east'
-}
-
-interface ICarveableGrid {
-  readonly getCell: (coord: ICoord) => ICell
-  readonly getAdjacentCellCoords: (
-    direction: Direction,
-    coord: ICoord
-  ) => ICoord
-  readonly coordInBounds: (coord: ICoord) => boolean
-  readonly getAvailableCellWalls: (cell: ICell, cellCoord: ICoord) => Wall[]
-}
-
-class CarveableGrid implements ICarveableGrid {
-  private grid: IGrid
-  constructor(grid: IGrid) {
-    this.grid = grid
-  }
-  public getCell = (coord: ICoord) => this.grid.getCell(coord)
-  public getAdjacentCellCoords = (direction: Direction, coord: ICoord) =>
-    this.grid.getAdjacentCellCoords(direction, coord)
-  public coordInBounds = (coord: ICoord) => this.grid.coordInBounds(coord)
-  public getAvailableCellWalls = (cell: ICell, cellCoord: ICoord) => {
-    // available cell walls are walls that have not been carved and that are adjacent to a cell
-    // that has not been visited
-
-    const walls = cell.getWalls()
-    const results: Wall[] = []
-    walls.forEach((direction, wall) => {
-      console.log('> ', direction, wall)
-      if (wall.state === 'solid') {
-        const adjacentCoord = this.grid.getAdjacentCellCoords(
-          direction,
-          cellCoord
-        )
-        if (this.grid.coordInBounds(adjacentCoord)) {
-          const adjacentCell = this.grid.getCell(adjacentCoord)
-          if (!adjacentCell.isVisited()) {
-            results.push(wall)
-          }
-        }
-      }
-    })
-
-    return results
-  }
-}
-
-function carveGridFactory(grid: IGrid): ICarveableGrid {
-  return new CarveableGrid(grid)
 }
 
 function carve(

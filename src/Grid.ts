@@ -1,120 +1,7 @@
-type WallState = 'solid' | 'carved'
-
-export class Wall {
-  public direction: Direction
-  public state: WallState = 'solid'
-  constructor(direction: Direction) {
-    this.direction = direction
-  }
-}
-
-const wallFactory = (direction: Direction) => new Wall(direction)
-
-export const directions: Direction[] = ['north', 'east', 'south', 'west']
-export type Direction = 'north' | 'east' | 'south' | 'west'
-
-// type Walls = Record<Direction, Wall>
-export interface IWalls {
-  readonly north: Wall
-  readonly east: Wall
-  readonly south: Wall
-  readonly west: Wall
-  readonly forEach: (cb: (direction: Direction, wall: Wall) => void) => void
-}
-
-// const Walls = {
-//   north: wallFactory(),
-//   east: wallFactory(),
-//   south: wallFactory(),
-//   west: wallFactory(),
-//   forEach: (cb: (direction: Direction, wall: Wall) => void) => {
-//     Object.keys(this).forEach((direction: Direction) => {
-//       cb(direction, this[direction])
-//     })
-//   }
-// }
-
-class Walls implements IWalls {
-  private walls: Record<Direction, Wall> = {
-    north: wallFactory('north'),
-    east: wallFactory('east'),
-    south: wallFactory('south'),
-    west: wallFactory('west')
-  }
-  public forEach = (cb: (direction: Direction, wall: Wall) => void) => {
-    Object.keys(this.walls).forEach((direction: Direction) => {
-      cb(direction, this.walls[direction])
-    })
-  }
-  public north = this.walls.north
-  public east = this.walls.east
-  public south = this.walls.south
-  public west = this.walls.west
-}
-
-const wallsFactory: () => IWalls = () => new Walls()
-
-export interface ICell {
-  readonly getWalls: () => IWalls
-  readonly markStart: () => void
-  readonly isStart: () => boolean
-  readonly markVisited: () => void
-  readonly isVisited: () => boolean
-  readonly getOppositeWall: (wall: number) => number
-  readonly getCoord: () => ICoord
-}
-class Cell implements ICell {
-  private walls: IWalls = wallsFactory()
-  private visited = false
-  private start = false
-  private coord: ICoord
-
-  constructor(coord: ICoord) {
-    this.coord = coord
-  }
-
-  public getWalls = () => this.walls
-  public markVisited = () => (this.visited = true)
-  public markStart = () => (this.start = true)
-  public isStart = () => this.start
-  public isVisited = () => this.visited
-  public getOppositeWall = (wall: number) => {
-    if (wall === 0) {
-      return 2
-    } else if (wall === 1) {
-      return 3
-    } else if (wall === 2) {
-      return 0
-    }
-    return 1
-  }
-  public getCoord = () => this.coord
-}
-
-export interface ICoord {
-  readonly row: number
-  readonly col: number
-}
-
-class Coord implements ICoord {
-  public row: number
-  public col: number
-  constructor(row: number, col: number) {
-    this.row = row
-    this.col = col
-  }
-}
-
-export const coordFactory: (row: number, col: number) => ICoord = (
-  row: number,
-  col: number
-) => new Coord(row, col)
-
-const randInRange = (min: number, max: number) => {
-  min = Math.ceil(min)
-  max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min)) + min
-}
+import { ICoord, coordFactory } from './Coord'
+import { ICell, cellFactory } from './Cell'
+import { Direction } from './Direction'
+import { randInRange } from './rand'
 
 export interface IGrid {
   readonly getRandCoord: () => ICoord
@@ -143,7 +30,7 @@ class Grid implements IGrid {
     for (let row = 0; row < rows; row++) {
       this.cells[row] = []
       for (let col = 0; col < cols; col++) {
-        this.cells[row][col] = new Cell(coordFactory(row, col))
+        this.cells[row][col] = cellFactory(coordFactory(row, col))
       }
     }
   }
