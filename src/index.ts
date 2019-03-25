@@ -23,7 +23,7 @@ function run(ctx: CanvasRenderingContext2D) {
   const cols = 5
   const size = 40
   const wallWidth = 1
-  const grid = gridFactory(size, rows, cols)
+  const grid = gridFactory(rows, cols)
 
   carveMaze(grid)
 

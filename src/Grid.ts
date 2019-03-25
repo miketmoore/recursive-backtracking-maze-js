@@ -14,12 +14,10 @@ export interface IGrid {
 }
 
 class Grid implements IGrid {
-  private size: number
   private rows: number
   private cols: number
   private cells: ICell[][]
-  constructor(size: number, rows: number, cols: number) {
-    this.size = size
+  constructor(rows: number, cols: number) {
     this.rows = rows
     this.cols = cols
     this.cells = []
@@ -81,8 +79,7 @@ class Grid implements IGrid {
   }
 }
 
-export const gridFactory: (
-  size: number,
-  rows: number,
-  cols: number
-) => IGrid = (size, rows, cols) => new Grid(size, rows, cols)
+export const gridFactory: (rows: number, cols: number) => IGrid = (
+  rows,
+  cols
+) => new Grid(rows, cols)
