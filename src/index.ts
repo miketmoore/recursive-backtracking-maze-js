@@ -29,8 +29,8 @@ function run(ctx: CanvasRenderingContext2D) {
 
   let x = 0
   let y = 0
-  grid.forEachRow(row => {
-    row.forEach(cell => {
+  grid.forEachRow((row, rowIndex) => {
+    row.forEach((cell, colIndex) => {
       drawRect(
         ctx,
         x,
@@ -39,6 +39,8 @@ function run(ctx: CanvasRenderingContext2D) {
         cell.isStart() ? 'blue' : cell.isVisited() ? 'yellow' : '#999'
       )
       drawCell(ctx, wallWidth, x, y, size, cell)
+      ctx.font = '12px sans-serif'
+      ctx.fillText(`${rowIndex},${colIndex}`, x + 5, y + 15)
       x += size
     })
     x = 0

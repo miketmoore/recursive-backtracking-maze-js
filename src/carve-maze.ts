@@ -34,14 +34,13 @@ function carve(
 
   // get list of walls not carved yet, that point to adjacent cells that have not been visited yet
   const walls = carveableGrid.getAvailableCellWalls(cell, coord)
-  console.log(walls.length)
 
   // get random wall from results
   if (walls.length === 0) {
-    // TODO backtrack
-    console.log('backtrack 0')
     if (previousCoord) {
-      console.log('backtrack 1')
+      console.log(
+        `backtracking from ${coord.toString()} to ${previousCoord.toString()}`
+      )
       carve(carveableGrid, null, previousCoord)
     }
     return
@@ -53,10 +52,17 @@ function carve(
   cell.markVisited()
 
   const adjacentCell = carveableGrid.getAdjacentCell(wall.direction, coord)
-  if (adjacentCell && !adjacentCell.isVisited()) {
-    const oppDir = getOppositeDirection(wall.direction)
-    adjacentCell.getWalls()[oppDir].state = 'carved'
-    adjacentCell.markVisited()
-    return carve(carveableGrid, coord, adjacentCell.getCoord())
+  if (adjacentCell) {
+    if (!adjacentCell.isVisited()) {
+      // console.log('adjacent cell has not been visited')
+      const oppDir = getOppositeDirection(wall.direction)
+      adjacentCell.getWalls()[oppDir].state = 'carved'
+      adjacentCell.markVisited()
+      return carve(carveableGrid, coord, adjacentCell.getCoord())
+    } else {
+      console.log('adjacent cell has been visited')
+    }
+  } else {
+    console.log('no cell')
   }
 }

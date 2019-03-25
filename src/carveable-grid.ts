@@ -28,7 +28,6 @@ class CarveableGrid implements ICarveableGrid {
     const walls = cell.getWalls()
     const results: Wall[] = []
     walls.forEach((direction, wall) => {
-      console.log('> ', direction, wall)
       if (wall.state === 'solid') {
         const adjacentCell = this.grid.getAdjacentCell(direction, cellCoord)
         if (adjacentCell && !adjacentCell.isVisited()) {

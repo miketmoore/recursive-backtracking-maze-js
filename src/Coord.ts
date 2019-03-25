@@ -1,6 +1,7 @@
 export interface ICoord {
   readonly row: number
   readonly col: number
+  readonly toString: () => string
 }
 
 class Coord implements ICoord {
@@ -10,6 +11,7 @@ class Coord implements ICoord {
     this.row = row
     this.col = col
   }
+  public toString = () => `[${this.row},${this.col}]`
 }
 
 export const coordFactory: (row: number, col: number) => ICoord = (
