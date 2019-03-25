@@ -61,11 +61,17 @@ export interface ICell {
   readonly markVisited: () => void
   readonly isVisited: () => boolean
   readonly getOppositeWall: (wall: number) => number
+  readonly getCoord: () => ICoord
 }
 class Cell implements ICell {
   private walls: IWalls = wallsFactory()
   private visited = false
   private start = false
+  private coord: ICoord
+
+  constructor(coord: ICoord) {
+    this.coord = coord
+  }
 
   public getWalls = () => this.walls
   public markVisited = () => (this.visited = true)
@@ -82,6 +88,7 @@ class Cell implements ICell {
     }
     return 1
   }
+  public getCoord = () => this.coord
 }
 
 export interface ICoord {
@@ -103,16 +110,24 @@ export const coordFactory: (row: number, col: number) => ICoord = (
   col: number
 ) => new Coord(row, col)
 
+const randInRange = (min: number, max: number) => {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min)) + min
+}
+
 export interface IGrid {
+  readonly getRandCoord: () => ICoord
   readonly forEachRow: (cb: (row: ICell[], rowIndex: number) => void) => void
   readonly getTotalRows: () => number
   readonly getTotalCols: () => number
-  readonly getCell: (row: number, col: number) => ICell
+  readonly getCell: (coord: ICoord) => ICell
   readonly getAdjacentCellCoords: (
     direction: Direction,
     coord: ICoord
   ) => ICoord
   readonly coordInBounds: (coord: ICoord) => boolean
+  readonly getRandCell: () => ICell
 }
 
 class Grid implements IGrid {
@@ -128,7 +143,7 @@ class Grid implements IGrid {
     for (let row = 0; row < rows; row++) {
       this.cells[row] = []
       for (let col = 0; col < cols; col++) {
-        this.cells[row][col] = new Cell()
+        this.cells[row][col] = new Cell(coordFactory(row, col))
       }
     }
   }
@@ -141,7 +156,7 @@ class Grid implements IGrid {
 
   public getTotalRows = () => this.rows
   public getTotalCols = () => this.cols
-  public getCell = (row: number, col: number) => this.cells[row][col]
+  public getCell = (coord: ICoord) => this.cells[coord.row][coord.col]
 
   public getAdjacentCellCoords: (
     direction: Direction,
@@ -164,6 +179,14 @@ class Grid implements IGrid {
   private colInBounds = (col: number) => col >= 0 && col < this.cols
   public coordInBounds = (coord: ICoord) => {
     return this.rowInBounds(coord.row) && this.colInBounds(coord.col)
+  }
+
+  public getRandCoord = () =>
+    coordFactory(randInRange(0, this.rows - 1), randInRange(0, this.cols - 1))
+
+  public getRandCell = () => {
+    const coord = this.getRandCoord()
+    return this.cells[coord.row][coord.col]
   }
 }
 

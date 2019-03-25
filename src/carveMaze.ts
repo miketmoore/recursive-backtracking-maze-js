@@ -15,19 +15,14 @@ const randInRange = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min)) + min
 }
 
-export function carveMaze(grid: IGrid) {
-  const rows = grid.getTotalRows()
-  const cols = grid.getTotalCols()
-  const row = randInRange(0, rows - 1)
-  const col = randInRange(0, cols - 1)
-  grid.getCell(row, col).markStart()
-  const carveGrid = carveGridFactory(grid)
-  carve(carveGrid, coordFactory(row, col))
-}
+const randCoord = (rows: number, cols: number) =>
+  coordFactory(randInRange(0, rows - 1), randInRange(0, cols - 1))
 
-const randDirection = () => {
-  const i = randInRange(0, 3)
-  return directions[i]
+export function carveMaze(grid: IGrid) {
+  const cell = grid.getRandCell()
+  cell.markStart()
+  const carveableGrid = carveGridFactory(grid)
+  carve(carveableGrid, null, cell.getCoord())
 }
 
 const getOppositeDirection: (direction: Direction) => Direction = direction => {
@@ -41,8 +36,8 @@ const getOppositeDirection: (direction: Direction) => Direction = direction => {
   return 'east'
 }
 
-interface ICarveGrid {
-  readonly getCell: (row: number, col: number) => ICell
+interface ICarveableGrid {
+  readonly getCell: (coord: ICoord) => ICell
   readonly getAdjacentCellCoords: (
     direction: Direction,
     coord: ICoord
@@ -51,12 +46,12 @@ interface ICarveGrid {
   readonly getAvailableCellWalls: (cell: ICell, cellCoord: ICoord) => Wall[]
 }
 
-class CarveGrid implements ICarveGrid {
+class CarveableGrid implements ICarveableGrid {
   private grid: IGrid
   constructor(grid: IGrid) {
     this.grid = grid
   }
-  public getCell = (row: number, col: number) => this.grid.getCell(row, col)
+  public getCell = (coord: ICoord) => this.grid.getCell(coord)
   public getAdjacentCellCoords = (direction: Direction, coord: ICoord) =>
     this.grid.getAdjacentCellCoords(direction, coord)
   public coordInBounds = (coord: ICoord) => this.grid.coordInBounds(coord)
@@ -74,10 +69,7 @@ class CarveGrid implements ICarveGrid {
           cellCoord
         )
         if (this.grid.coordInBounds(adjacentCoord)) {
-          const adjacentCell = this.grid.getCell(
-            adjacentCoord.row,
-            adjacentCoord.col
-          )
+          const adjacentCell = this.grid.getCell(adjacentCoord)
           if (!adjacentCell.isVisited()) {
             results.push(wall)
           }
@@ -89,12 +81,16 @@ class CarveGrid implements ICarveGrid {
   }
 }
 
-function carveGridFactory(grid: IGrid): ICarveGrid {
-  return new CarveGrid(grid)
+function carveGridFactory(grid: IGrid): ICarveableGrid {
+  return new CarveableGrid(grid)
 }
 
-function carve(grid: ICarveGrid, coord: ICoord) {
-  const cell = grid.getCell(coord.row, coord.col)
+function carve(
+  grid: ICarveableGrid,
+  previousCoord: ICoord | null,
+  coord: ICoord
+): void {
+  const cell = grid.getCell(coord)
 
   // get walls not carved yet, that point to adjacent cells that have not been visited yet
   const walls = grid.getAvailableCellWalls(cell, coord)
@@ -102,8 +98,17 @@ function carve(grid: ICarveGrid, coord: ICoord) {
 
   // get random wall from results
   if (walls.length === 0) {
+    // TODO backtrack
+    console.log('backtrack 0')
+    if (previousCoord) {
+      console.log('backtrack 1')
+      carve(grid, null, previousCoord)
+    }
     return
   }
+
+  // TODO try all available walls
+
   const wallIndex = randInRange(0, walls.length)
   const wall = walls[wallIndex]
   wall.state = 'carved'
@@ -111,37 +116,12 @@ function carve(grid: ICarveGrid, coord: ICoord) {
 
   const adjacentCellCoords = grid.getAdjacentCellCoords(wall.direction, coord)
   if (grid.coordInBounds(adjacentCellCoords)) {
-    const adjacentCell = grid.getCell(
-      adjacentCellCoords.row,
-      adjacentCellCoords.col
-    )
+    const adjacentCell = grid.getCell(adjacentCellCoords)
     if (!adjacentCell.isVisited()) {
       const oppDir = getOppositeDirection(wall.direction)
       adjacentCell.getWalls()[oppDir].state = 'carved'
       adjacentCell.markVisited()
-      carve(grid, adjacentCellCoords)
-      // carve(grid, adjacentCellCoords)
+      return carve(grid, coord, adjacentCellCoords)
     }
   }
-
-  // // const wall = randInRange(0, 3)
-  // const direction = randDirection()
-
-  // const x = cell.getWalls()
-
-  // // cell.getWalls()[direction].state = 'carved'
-  // cell.markVisited()
-  // console.log(cell)
-
-  // // is cell that is adjacent to wall that was just carved already visited or not?
-  // const adjacentCoord = grid.getAdjacentCellCoords(direction, coord)
-
-  // if (grid.coordInBounds(adjacentCoord)) {
-  //   const adjacent = grid.getCell(adjacentCoord.row, adjacentCoord.col)
-  //   if (!adjacent.isVisited()) {
-  //     const oppDir = getOppositeDirection(direction)
-  //     adjacent.getWalls()[oppDir].state = 'carved'
-  //     carve(grid, adjacentCoord)
-  //   }
-  // }
 }
