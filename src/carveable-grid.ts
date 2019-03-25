@@ -12,6 +12,10 @@ export interface ICarveableGrid {
   ) => ICoord
   readonly coordInBounds: (coord: ICoord) => boolean
   readonly getAvailableCellWalls: (cell: ICell, cellCoord: ICoord) => Wall[]
+  readonly getAdjacentCell: (
+    direction: Direction,
+    coord: ICoord
+  ) => ICell | undefined
 }
 
 class CarveableGrid implements ICarveableGrid {
@@ -23,6 +27,8 @@ class CarveableGrid implements ICarveableGrid {
   public getAdjacentCellCoords = (direction: Direction, coord: ICoord) =>
     this.grid.getAdjacentCellCoords(direction, coord)
   public coordInBounds = (coord: ICoord) => this.grid.coordInBounds(coord)
+  public getAdjacentCell = (direction: Direction, coord: ICoord) =>
+    this.grid.getAdjacentCell(direction, coord)
   public getAvailableCellWalls = (cell: ICell, cellCoord: ICoord) => {
     // available cell walls are walls that have not been carved and that are adjacent to a cell
     // that has not been visited

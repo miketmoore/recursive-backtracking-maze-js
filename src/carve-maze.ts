@@ -32,7 +32,7 @@ function carve(
 ): void {
   const cell = grid.getCell(coord)
 
-  // get walls not carved yet, that point to adjacent cells that have not been visited yet
+  // get list of walls not carved yet, that point to adjacent cells that have not been visited yet
   const walls = grid.getAvailableCellWalls(cell, coord)
   console.log(walls.length)
 
@@ -47,21 +47,16 @@ function carve(
     return
   }
 
-  // TODO try all available walls
-
   const wallIndex = randInRange(0, walls.length)
   const wall = walls[wallIndex]
   wall.state = 'carved'
   cell.markVisited()
 
-  const adjacentCellCoords = grid.getAdjacentCellCoords(wall.direction, coord)
-  if (grid.coordInBounds(adjacentCellCoords)) {
-    const adjacentCell = grid.getCell(adjacentCellCoords)
-    if (!adjacentCell.isVisited()) {
-      const oppDir = getOppositeDirection(wall.direction)
-      adjacentCell.getWalls()[oppDir].state = 'carved'
-      adjacentCell.markVisited()
-      return carve(grid, coord, adjacentCellCoords)
-    }
+  const adjacentCell = grid.getAdjacentCell(wall.direction, coord)
+  if (adjacentCell && !adjacentCell.isVisited()) {
+    const oppDir = getOppositeDirection(wall.direction)
+    adjacentCell.getWalls()[oppDir].state = 'carved'
+    adjacentCell.markVisited()
+    return carve(grid, coord, adjacentCell.getCoord())
   }
 }

@@ -13,6 +13,10 @@ export interface IGrid {
     direction: Direction,
     coord: ICoord
   ) => ICoord
+  readonly getAdjacentCell: (
+    direction: Direction,
+    coord: ICoord
+  ) => ICell | undefined
   readonly coordInBounds: (coord: ICoord) => boolean
   readonly getRandCell: () => ICell
 }
@@ -60,6 +64,16 @@ class Grid implements IGrid {
         return coordFactory(coord.row, coord.col - 1)
     }
     return coordFactory(-1, -1)
+  }
+
+  public getAdjacentCell: (
+    direction: Direction,
+    coord: ICoord
+  ) => ICell | undefined = (direction, coord) => {
+    const adjacentCoords = this.getAdjacentCellCoords(direction, coord)
+    return this.coordInBounds(adjacentCoords)
+      ? this.getCell(adjacentCoords)
+      : undefined
   }
 
   private rowInBounds = (row: number) => row >= 0 && row < this.rows
