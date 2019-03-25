@@ -13,34 +13,34 @@ window.onload = () => {
   }
 
   const newBtn = document.getElementById('new') as HTMLButtonElement
-  newBtn.onclick = () => run(ctx)
+  newBtn.onclick = () => run(canvas, ctx)
 
-  run(ctx)
+  run(canvas, ctx)
 }
 
-function run(ctx: CanvasRenderingContext2D) {
-  const rows = 5
-  const cols = 5
-  const size = 40
+function run(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+  const rows = 50
+  const cols = 50
+  const size = 10
   const wallWidth = 1
   const grid = gridFactory(rows, cols)
 
   carveMaze(grid)
-
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
   let x = 0
   let y = 0
   grid.forEachRow((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
-      drawRect(
-        ctx,
-        x,
-        y,
-        size,
-        cell.isStart() ? 'blue' : cell.isVisited() ? 'yellow' : '#999'
-      )
+      // drawRect(
+      //   ctx,
+      //   x,
+      //   y,
+      //   size,
+      //   cell.isStart() ? 'blue' : cell.isVisited() ? 'yellow' : '#999'
+      // )
       drawCell(ctx, wallWidth, x, y, size, cell)
-      ctx.font = '12px sans-serif'
-      ctx.fillText(`${rowIndex},${colIndex}`, x + 5, y + 15)
+      // ctx.font = '12px sans-serif'
+      // ctx.fillText(`${rowIndex},${colIndex}`, x + 5, y + 15)
       x += size
     })
     x = 0
