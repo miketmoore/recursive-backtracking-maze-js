@@ -4,20 +4,12 @@ import { Direction } from './direction'
 import { randInRange } from './rand'
 
 export interface IGrid {
-  readonly getRandCoord: () => ICoord
   readonly forEachRow: (cb: (row: ICell[], rowIndex: number) => void) => void
-  readonly getTotalRows: () => number
-  readonly getTotalCols: () => number
   readonly getCell: (coord: ICoord) => ICell
-  readonly getAdjacentCellCoords: (
-    direction: Direction,
-    coord: ICoord
-  ) => ICoord
   readonly getAdjacentCell: (
     direction: Direction,
     coord: ICoord
   ) => ICell | undefined
-  readonly coordInBounds: (coord: ICoord) => boolean
   readonly getRandCell: () => ICell
 }
 
@@ -45,11 +37,9 @@ class Grid implements IGrid {
     })
   }
 
-  public getTotalRows = () => this.rows
-  public getTotalCols = () => this.cols
   public getCell = (coord: ICoord) => this.cells[coord.row][coord.col]
 
-  public getAdjacentCellCoords: (
+  private getAdjacentCellCoords: (
     direction: Direction,
     coord: ICoord
   ) => ICoord = (direction, coord) => {
@@ -78,11 +68,11 @@ class Grid implements IGrid {
 
   private rowInBounds = (row: number) => row >= 0 && row < this.rows
   private colInBounds = (col: number) => col >= 0 && col < this.cols
-  public coordInBounds = (coord: ICoord) => {
+  private coordInBounds = (coord: ICoord) => {
     return this.rowInBounds(coord.row) && this.colInBounds(coord.col)
   }
 
-  public getRandCoord = () =>
+  private getRandCoord = () =>
     coordFactory(randInRange(0, this.rows - 1), randInRange(0, this.cols - 1))
 
   public getRandCell = () => {

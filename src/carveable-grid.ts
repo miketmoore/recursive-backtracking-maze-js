@@ -6,11 +6,6 @@ import { Wall } from './walls'
 
 export interface ICarveableGrid {
   readonly getCell: (coord: ICoord) => ICell
-  readonly getAdjacentCellCoords: (
-    direction: Direction,
-    coord: ICoord
-  ) => ICoord
-  readonly coordInBounds: (coord: ICoord) => boolean
   readonly getAvailableCellWalls: (cell: ICell, cellCoord: ICoord) => Wall[]
   readonly getAdjacentCell: (
     direction: Direction,
@@ -24,9 +19,6 @@ class CarveableGrid implements ICarveableGrid {
     this.grid = grid
   }
   public getCell = (coord: ICoord) => this.grid.getCell(coord)
-  public getAdjacentCellCoords = (direction: Direction, coord: ICoord) =>
-    this.grid.getAdjacentCellCoords(direction, coord)
-  public coordInBounds = (coord: ICoord) => this.grid.coordInBounds(coord)
   public getAdjacentCell = (direction: Direction, coord: ICoord) =>
     this.grid.getAdjacentCell(direction, coord)
   public getAvailableCellWalls = (cell: ICell, cellCoord: ICoord) => {
@@ -38,15 +30,9 @@ class CarveableGrid implements ICarveableGrid {
     walls.forEach((direction, wall) => {
       console.log('> ', direction, wall)
       if (wall.state === 'solid') {
-        const adjacentCoord = this.grid.getAdjacentCellCoords(
-          direction,
-          cellCoord
-        )
-        if (this.grid.coordInBounds(adjacentCoord)) {
-          const adjacentCell = this.grid.getCell(adjacentCoord)
-          if (!adjacentCell.isVisited()) {
-            results.push(wall)
-          }
+        const adjacentCell = this.grid.getAdjacentCell(direction, cellCoord)
+        if (adjacentCell && !adjacentCell.isVisited()) {
+          results.push(wall)
         }
       }
     })

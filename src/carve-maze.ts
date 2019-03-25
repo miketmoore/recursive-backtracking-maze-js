@@ -26,14 +26,14 @@ const getOppositeDirection: (direction: Direction) => Direction = direction => {
 }
 
 function carve(
-  grid: ICarveableGrid,
+  carveableGrid: ICarveableGrid,
   previousCoord: ICoord | null,
   coord: ICoord
 ): void {
-  const cell = grid.getCell(coord)
+  const cell = carveableGrid.getCell(coord)
 
   // get list of walls not carved yet, that point to adjacent cells that have not been visited yet
-  const walls = grid.getAvailableCellWalls(cell, coord)
+  const walls = carveableGrid.getAvailableCellWalls(cell, coord)
   console.log(walls.length)
 
   // get random wall from results
@@ -42,7 +42,7 @@ function carve(
     console.log('backtrack 0')
     if (previousCoord) {
       console.log('backtrack 1')
-      carve(grid, null, previousCoord)
+      carve(carveableGrid, null, previousCoord)
     }
     return
   }
@@ -52,11 +52,11 @@ function carve(
   wall.state = 'carved'
   cell.markVisited()
 
-  const adjacentCell = grid.getAdjacentCell(wall.direction, coord)
+  const adjacentCell = carveableGrid.getAdjacentCell(wall.direction, coord)
   if (adjacentCell && !adjacentCell.isVisited()) {
     const oppDir = getOppositeDirection(wall.direction)
     adjacentCell.getWalls()[oppDir].state = 'carved'
     adjacentCell.markVisited()
-    return carve(grid, coord, adjacentCell.getCoord())
+    return carve(carveableGrid, coord, adjacentCell.getCoord())
   }
 }
