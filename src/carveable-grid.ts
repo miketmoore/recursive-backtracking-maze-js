@@ -11,6 +11,7 @@ export interface ICarveableGrid {
     direction: Direction,
     coord: ICoord
   ) => ICell | undefined
+  readonly forEachRow: (cb: (row: ICell[], rowIndex: number) => void) => void
 }
 
 class CarveableGrid implements ICarveableGrid {
@@ -37,6 +38,9 @@ class CarveableGrid implements ICarveableGrid {
     })
 
     return results
+  }
+  public forEachRow = (cb: (row: ICell[], rowIndex: number) => void) => {
+    this.grid.forEachRow(cb)
   }
 }
 

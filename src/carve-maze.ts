@@ -4,15 +4,16 @@ import { carveGridFactory, ICarveableGrid } from './carveable-grid'
 import { randInRange } from './rand'
 import { coordFactory, ICoord } from './coord'
 import { Direction } from './direction'
+import { IRenderer } from './renderer'
 
 const randCoord = (rows: number, cols: number) =>
   coordFactory(randInRange(0, rows - 1), randInRange(0, cols - 1))
 
-export function carveMaze(grid: IGrid) {
+export function carveMaze(renderer: IRenderer, grid: IGrid) {
   const cell = grid.getRandCell()
   cell.markStart()
   const carveableGrid = carveGridFactory(grid)
-  carve(carveableGrid, [cell])
+  carve(renderer, carveableGrid, [cell])
 }
 
 const getOppositeDirection: (direction: Direction) => Direction = direction => {
@@ -26,7 +27,11 @@ const getOppositeDirection: (direction: Direction) => Direction = direction => {
   return 'east'
 }
 
-function carve(carveableGrid: ICarveableGrid, history: ICell[]): void {
+function carve(
+  renderer: IRenderer,
+  carveableGrid: ICarveableGrid,
+  history: ICell[]
+): void {
   // const cell = carveableGrid.getCell(coord)
   const cell = history[history.length - 1]
 
@@ -44,8 +49,11 @@ function carve(carveableGrid: ICarveableGrid, history: ICell[]): void {
       //     .toString()} to ${previousCell.getCoord().toString()}`
       // )
       // carve(carveableGrid, null, previousCoord, history.push)
-      history.pop()
-      carve(carveableGrid, history)
+      const x = history.pop()
+      if (x) {
+        x.markPopped()
+      }
+      carve(renderer, carveableGrid, history)
       return
     } else {
       // console.log('cannot backtrack, previous coord is null')
@@ -69,7 +77,11 @@ function carve(carveableGrid: ICarveableGrid, history: ICell[]): void {
       adjacentCell.getWalls()[oppDir].state = 'carved'
       adjacentCell.markVisited()
       history.push(adjacentCell)
-      carve(carveableGrid, history)
+
+      setTimeout(() => {
+        renderer.render(carveableGrid)
+        carve(renderer, carveableGrid, history)
+      }, 5)
     } else {
       console.log('adjacent cell has been visited')
     }
