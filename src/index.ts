@@ -15,15 +15,38 @@ window.onload = () => {
 
   const state: {
     size: number
+    rows: number
+    cols: number
     wallWidth: number
     showColor: boolean
   } = {
     size: 10,
+    rows: 10,
+    cols: 10,
     wallWidth: 1,
     showColor: true
   }
 
   const newBtn = document.getElementById('new') as HTMLButtonElement
+
+  const rowsInput = document.getElementById('rows') as HTMLInputElement
+  rowsInput.addEventListener(
+    'input',
+    e => {
+      state.rows = parseInt((e.target as HTMLInputElement).value)
+    },
+    false
+  )
+
+  const colsInput = document.getElementById('cols') as HTMLInputElement
+  colsInput.addEventListener(
+    'input',
+    e => {
+      state.cols = parseInt((e.target as HTMLInputElement).value)
+    },
+    false
+  )
+
   const sizeInput = document.getElementById('size') as HTMLInputElement
   sizeInput.addEventListener(
     'input',
@@ -61,20 +84,23 @@ function run(
   ctx: CanvasRenderingContext2D,
   {
     size,
+    rows,
+    cols,
     wallWidth,
     showColor
   }: {
     readonly size: number
+    readonly rows: number
+    readonly cols: number
     readonly wallWidth: number
     readonly showColor: boolean
   }
 ) {
-  console.log(`size=${size} wallWidth=${wallWidth}`)
-  const timeout = 1
-  const rows = 30
-  const cols = 30
+  const timeout = 10
   const grid = gridFactory(rows, cols)
 
+  canvas.width = cols * size
+  canvas.height = rows * size
   const renderer = rendererFactory(canvas, ctx, {
     wallWidth,
     size,
