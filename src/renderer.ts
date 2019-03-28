@@ -8,6 +8,7 @@ export interface IRenderer {
 interface RendererOptions {
   readonly wallWidth: number
   readonly size: number
+  readonly showColor: boolean
 }
 
 class Renderer implements IRenderer {
@@ -29,19 +30,21 @@ class Renderer implements IRenderer {
     let y = 0
     grid.forEachRow((row, rowIndex) => {
       row.forEach((cell, colIndex) => {
-        // drawRect(
-        //   this.ctx,
-        //   x,
-        //   y,
-        //   this.options.size,
-        //   cell.isStart()
-        //     ? 'blue'
-        //     : cell.isPopped()
-        //     ? 'orange'
-        //     : cell.isVisited()
-        //     ? 'yellow'
-        //     : '#999'
-        // )
+        if (this.options.showColor) {
+          drawRect(
+            this.ctx,
+            x,
+            y,
+            this.options.size,
+            cell.isStart()
+              ? 'blue'
+              : cell.isPopped()
+              ? 'orange'
+              : cell.isVisited()
+              ? 'yellow'
+              : '#999'
+          )
+        }
         drawCell(
           this.ctx,
           this.options.wallWidth,

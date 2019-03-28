@@ -67,10 +67,10 @@ function carve(
       adjacentCell.markVisited()
       history.push(adjacentCell)
 
-      setTimeout(() => {
-        renderer.render(carveableGrid)
-        carve(renderer, timeout, carveableGrid, history)
-      }, timeout)
+      // setTimeout(() => {
+      renderer.render(carveableGrid)
+      carve(renderer, timeout, carveableGrid, history)
+      // }, timeout)
     }
   }
 }

@@ -13,23 +13,72 @@ window.onload = () => {
     throw new Error('Could not get 2d context')
   }
 
-  const newBtn = document.getElementById('new') as HTMLButtonElement
-  newBtn.onclick = () => run(canvas, ctx)
+  const state: {
+    size: number
+    wallWidth: number
+    showColor: boolean
+  } = {
+    size: 10,
+    wallWidth: 1,
+    showColor: true
+  }
 
-  run(canvas, ctx)
+  const newBtn = document.getElementById('new') as HTMLButtonElement
+  const sizeInput = document.getElementById('size') as HTMLInputElement
+  sizeInput.addEventListener(
+    'input',
+    e => {
+      state.size = parseInt((e.target as HTMLInputElement).value)
+    },
+    false
+  )
+  const wallWidthInput = document.getElementById(
+    'wallWidth'
+  ) as HTMLInputElement
+  wallWidthInput.addEventListener(
+    'input',
+    e => {
+      state.wallWidth = parseInt((e.target as HTMLInputElement).value)
+    },
+    false
+  )
+  const colorInput = document.getElementById('color') as HTMLInputElement
+  colorInput.addEventListener(
+    'input',
+    e => {
+      state.showColor = !!(e.target as HTMLInputElement).checked
+    },
+    false
+  )
+
+  newBtn.onclick = () => run(canvas, ctx, state)
+
+  run(canvas, ctx, state)
 }
 
-function run(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+function run(
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  {
+    size,
+    wallWidth,
+    showColor
+  }: {
+    readonly size: number
+    readonly wallWidth: number
+    readonly showColor: boolean
+  }
+) {
+  console.log(`size=${size} wallWidth=${wallWidth}`)
   const timeout = 1
   const rows = 30
   const cols = 30
-  const size = 10
-  const wallWidth = 1
   const grid = gridFactory(rows, cols)
 
   const renderer = rendererFactory(canvas, ctx, {
     wallWidth,
-    size
+    size,
+    showColor
   })
   carveMaze(renderer, timeout, grid)
 }
