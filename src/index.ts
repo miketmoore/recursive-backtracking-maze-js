@@ -17,17 +17,28 @@ window.onload = () => {
     size: number
     rows: number
     cols: number
+    timeout: number
     wallWidth: number
     showColor: boolean
   } = {
     size: 10,
     rows: 10,
     cols: 10,
+    timeout: 10,
     wallWidth: 1,
     showColor: true
   }
 
   const newBtn = document.getElementById('new') as HTMLButtonElement
+
+  const timeoutInput = document.getElementById('timeout') as HTMLInputElement
+  timeoutInput.addEventListener(
+    'input',
+    e => {
+      state.timeout = parseInt((e.target as HTMLInputElement).value)
+    },
+    false
+  )
 
   const rowsInput = document.getElementById('rows') as HTMLInputElement
   rowsInput.addEventListener(
@@ -86,17 +97,18 @@ function run(
     size,
     rows,
     cols,
+    timeout,
     wallWidth,
     showColor
   }: {
     readonly size: number
     readonly rows: number
     readonly cols: number
+    readonly timeout: number
     readonly wallWidth: number
     readonly showColor: boolean
   }
 ) {
-  const timeout = 10
   const grid = gridFactory(rows, cols)
 
   canvas.width = cols * size
