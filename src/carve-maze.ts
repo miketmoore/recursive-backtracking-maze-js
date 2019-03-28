@@ -4,15 +4,16 @@ import { carveGridFactory, ICarveableGrid } from './carveable-grid'
 import { randInRange } from './rand'
 import { coordFactory, ICoord } from './coord'
 import { Direction } from './direction'
+import { IRenderer } from './renderer'
 
 const randCoord = (rows: number, cols: number) =>
   coordFactory(randInRange(0, rows - 1), randInRange(0, cols - 1))
 
-export function carveMaze(grid: IGrid) {
+export function carveMaze(renderer: IRenderer, timeout: number, grid: IGrid) {
   const cell = grid.getRandCell()
   cell.markStart()
   const carveableGrid = carveGridFactory(grid)
-  carve(carveableGrid, [cell])
+  carve(renderer, timeout, carveableGrid, [cell])
 }
 
 const getOppositeDirection: (direction: Direction) => Direction = direction => {
@@ -26,8 +27,12 @@ const getOppositeDirection: (direction: Direction) => Direction = direction => {
   return 'east'
 }
 
-function carve(carveableGrid: ICarveableGrid, history: ICell[]): void {
-  // const cell = carveableGrid.getCell(coord)
+function carve(
+  renderer: IRenderer,
+  timeout: number,
+  carveableGrid: ICarveableGrid,
+  history: ICell[]
+): void {
   const cell = history[history.length - 1]
 
   // get list of walls not carved yet, that point to adjacent cells that have not been visited yet
@@ -35,20 +40,13 @@ function carve(carveableGrid: ICarveableGrid, history: ICell[]): void {
 
   // get random wall from results
   if (walls.length === 0) {
-    // console.log('backtracking...')
     if (history.length >= 2) {
-      const previousCell = history[history.length - 2]
-      // console.log(
-      //   `backtracking from ${cell
-      //     .getCoord()
-      //     .toString()} to ${previousCell.getCoord().toString()}`
-      // )
-      // carve(carveableGrid, null, previousCoord, history.push)
-      history.pop()
-      carve(carveableGrid, history)
+      const backtrackedCell = history.pop()
+      if (backtrackedCell) {
+        backtrackedCell.markPopped()
+      }
+      carve(renderer, timeout, carveableGrid, history)
       return
-    } else {
-      // console.log('cannot backtrack, previous coord is null')
     }
     return
   }
@@ -64,16 +62,15 @@ function carve(carveableGrid: ICarveableGrid, history: ICell[]): void {
   )
   if (adjacentCell) {
     if (!adjacentCell.isVisited()) {
-      // console.log('adjacent cell has not been visited')
       const oppDir = getOppositeDirection(wall.direction)
       adjacentCell.getWalls()[oppDir].state = 'carved'
       adjacentCell.markVisited()
       history.push(adjacentCell)
-      carve(carveableGrid, history)
-    } else {
-      console.log('adjacent cell has been visited')
+
+      setTimeout(() => {
+        renderer.render(carveableGrid)
+        carve(renderer, timeout, carveableGrid, history)
+      }, timeout)
     }
-  } else {
-    console.log('no cell')
   }
 }
