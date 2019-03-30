@@ -25,7 +25,6 @@ class CarveableGrid implements ICarveableGrid {
   public getAvailableCellWalls = (cell: ICell, cellCoord: ICoord) => {
     // available cell walls are walls that have not been carved and that are adjacent to a cell
     // that has not been visited
-
     const walls = cell.getWalls()
     const results: Wall[] = []
     walls.forEach((direction, wall) => {

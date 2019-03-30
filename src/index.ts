@@ -1,7 +1,5 @@
-import { gridFactory } from './grid'
-import { carveMaze } from './carve-maze'
-import { ICell } from './cell'
 import { rendererFactory } from './renderer'
+import { mazeGenerator } from '@miketmoore/maze-generator'
 
 window.onload = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement
@@ -109,8 +107,7 @@ function run(
     readonly showColor: boolean
   }
 ) {
-  const grid = gridFactory(rows, cols)
-
+  const grid = mazeGenerator(rows, cols)
   canvas.width = cols * size
   canvas.height = rows * size
   const renderer = rendererFactory(canvas, ctx, {
@@ -118,5 +115,5 @@ function run(
     size,
     showColor
   })
-  carveMaze(renderer, timeout, grid)
+  renderer.render(grid)
 }

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "author": "Michael Moore <miketmoore@gmail.com>",
   "devDependencies": {
+    "@miketmoore/maze-generator": "^1.0.8",
     "awesome-typescript-loader": "^5.2.1",
     "html-webpack-plugin": "^3.2.0",
     "prettier": "^1.16.4",

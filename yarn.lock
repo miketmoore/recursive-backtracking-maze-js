@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@miketmoore/maze-generator@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@miketmoore/maze-generator/-/maze-generator-1.0.8.tgz#f258eb32c16810fdcd09e2de6ee2668e7c851a7a"
+  integrity sha512-GlHbAl/aVIS3VMgL0CqGpRirtJ/ZsuOHeu3fR6k+MGX8X91/kvJpUJhg/MxEi5dz9tCMCHP/G3ouyyMTwrslWQ==
+
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.8.5.tgz#51b1c5fe6576a34953bf4b253df9f0d490d9e359"

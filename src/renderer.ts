@@ -1,8 +1,8 @@
-import { ICarveableGrid } from './carveable-grid'
+import { IGrid } from './grid'
 import { ICell } from './cell'
 
 export interface IRenderer {
-  readonly render: (grid: ICarveableGrid) => void
+  readonly render: (grid: IGrid) => void
 }
 
 interface RendererOptions {
@@ -24,7 +24,7 @@ class Renderer implements IRenderer {
     this.ctx = ctx
     this.options = options
   }
-  public render(grid: ICarveableGrid) {
+  public render(grid: IGrid) {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     let x = 0
     let y = 0
