@@ -15,28 +15,15 @@ window.onload = () => {
     size: number
     rows: number
     cols: number
-    timeout: number
     wallWidth: number
-    showColor: boolean
   } = {
     size: 10,
     rows: 10,
     cols: 10,
-    timeout: 10,
-    wallWidth: 1,
-    showColor: true
+    wallWidth: 1
   }
 
   const newBtn = document.getElementById('new') as HTMLButtonElement
-
-  const timeoutInput = document.getElementById('timeout') as HTMLInputElement
-  timeoutInput.addEventListener(
-    'input',
-    e => {
-      state.timeout = parseInt((e.target as HTMLInputElement).value)
-    },
-    false
-  )
 
   const rowsInput = document.getElementById('rows') as HTMLInputElement
   rowsInput.addEventListener(
@@ -74,14 +61,6 @@ window.onload = () => {
     },
     false
   )
-  const colorInput = document.getElementById('color') as HTMLInputElement
-  colorInput.addEventListener(
-    'input',
-    e => {
-      state.showColor = !!(e.target as HTMLInputElement).checked
-    },
-    false
-  )
 
   newBtn.onclick = () => run(canvas, ctx, state)
 
@@ -95,25 +74,23 @@ function run(
     size,
     rows,
     cols,
-    timeout,
-    wallWidth,
-    showColor
+    wallWidth
   }: {
     readonly size: number
     readonly rows: number
     readonly cols: number
-    readonly timeout: number
     readonly wallWidth: number
-    readonly showColor: boolean
   }
 ) {
-  const grid = mazeGenerator(rows, cols)
+  const grid = mazeGenerator({
+    rows,
+    columns: cols
+  })
   canvas.width = cols * size
   canvas.height = rows * size
   const renderer = rendererFactory(canvas, ctx, {
     wallWidth,
-    size,
-    showColor
+    size
   })
   renderer.render(grid)
 }
