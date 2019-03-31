@@ -1,5 +1,4 @@
-import { IGrid } from './grid'
-import { ICell } from './cell'
+import { IGrid, ICell } from '@miketmoore/maze-generator'
 
 export interface IRenderer {
   readonly render: (grid: IGrid) => void
