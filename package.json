@@ -1,5 +1,5 @@
 {
-  "name": "recursive-backtracking-maze-js",
+  "name": "maze-renderer-js",
   "version": "1.0.0",
   "author": "Michael Moore <miketmoore@gmail.com>",
   "devDependencies": {
