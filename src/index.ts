@@ -17,9 +17,9 @@ window.onload = () => {
     cols: number
     wallWidth: number
   } = {
-    size: 10,
-    rows: 10,
-    cols: 10,
+    size: 6,
+    rows: 100,
+    cols: 100,
     wallWidth: 1
   }
 
