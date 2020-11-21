@@ -3,9 +3,9 @@
 
 
 "@miketmoore/maze-generator@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@miketmoore/maze-generator/-/maze-generator-1.1.0.tgz#9feb77b1efc35fe72e42f74e4b604afcba6fe7c0"
-  integrity sha512-po4Gdk9E5P3Sg0TWuV4WSx3yhArs1VYZmG9hEndNaWXjSk/tCv7DtunXy6or9/3omb0vs3raX8C7nYTld2n2NQ==
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@miketmoore/maze-generator/-/maze-generator-1.1.1.tgz#99bca3e71977af014c1f61975b476a29e2a30f85"
+  integrity sha512-ZRqOL2WuoGIZ7HA99VLTDPuOXXzxhOs1qruL6eQEK+qI5kewCuB69mhhZ6UvoN780bKyLmSxHLkAlu7se2v3nA==
 
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
