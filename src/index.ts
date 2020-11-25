@@ -17,9 +17,9 @@ window.onload = () => {
     cols: number
     wallWidth: number
   } = {
-    size: 6,
-    rows: 100,
-    cols: 100,
+    size: 10,
+    rows: 10,
+    cols: 10,
     wallWidth: 1
   }
 
@@ -82,10 +82,13 @@ function run(
     readonly wallWidth: number
   }
 ) {
-  const grid = mazeGenerator({
-    rows,
-    columns: cols
-  })
+  const grid = mazeGenerator(
+    {
+      rows,
+      columns: cols
+    },
+    'iterative'
+  )
   canvas.width = cols * size
   canvas.height = rows * size
   const renderer = rendererFactory(canvas, ctx, {

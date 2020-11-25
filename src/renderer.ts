@@ -26,8 +26,8 @@ class Renderer implements IRenderer {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     let x = 0
     let y = 0
-    grid.forEachRow((row, rowIndex) => {
-      row.forEach((cell, colIndex) => {
+    grid.forEachRow(row => {
+      row.forEach(cell => {
         drawCell(
           this.ctx,
           this.options.wallWidth,
@@ -42,17 +42,6 @@ class Renderer implements IRenderer {
       y += this.options.size
     })
   }
-}
-
-function drawRect(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  size: number,
-  color: string
-) {
-  ctx.fillStyle = color
-  ctx.fillRect(x, y, size, size)
 }
 
 function drawCell(
